@@ -1,6 +1,6 @@
 # Lit CSS Canvas
 
-[Lit](https://lit.dev) Examples of how to take HTML Elements or SVG Elements as slots and render them on a canvas that can be dragged as a whole or individual items.
+[Lit](https://lit.dev) Example of how to take HTML Elements or SVG Elements as slots and render them on a canvas that can be dragged as a whole or individual items.
 
 You can try the demo [here](https://rodydavis.github.io/lit-css-canvas/)!
 
