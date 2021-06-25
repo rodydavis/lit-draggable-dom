@@ -4,6 +4,8 @@
 
 You can try the demo [here](https://rodydavis.github.io/lit-css-canvas/)!
 
+Here is the related [blog post](https://rodydavis.com/posts/lit-css-canvas/).
+
 This uses [CSS 2D transforms and pointer capture events](https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture) to efficiently render and move the elements.
 
 ![](/screenshot.png)
