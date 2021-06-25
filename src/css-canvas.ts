@@ -57,7 +57,6 @@ export class CSSCanvas extends LitElement {
   `;
 
   render() {
-    console.log("render");
     return html`
       <main class="full-size">
         <canvas class="full-size"></canvas>
@@ -127,36 +126,52 @@ export class CSSCanvas extends LitElement {
   async firstUpdated() {
     const items = Array.from(this.childNodes);
     let i = 0;
+    const addEvents = (
+      elem: Element,
+      type: DragType,
+      onMove: (delta: Offset) => void
+    ) => {
+      elem.addEventListener("pointerdown", (e: any) => {
+        this.handleDown(e, type);
+      });
+      elem.addEventListener("pointermove", (e: any) => {
+        this.handleMove(e, type, (delta) => {
+          onMove(delta);
+        });
+      });
+      elem.addEventListener("touchstart", (e: any) => {
+        this.handleDown(e, type);
+      });
+      elem.addEventListener("pointermove", (e: any) => {
+        this.handleMove(e, type, (delta) => {
+          onMove(delta);
+        });
+      });
+    };
     for (const node of items) {
       if (node instanceof SVGElement || node instanceof HTMLElement) {
         const child = node as SupportedNode;
         child.classList.add("child");
         child.style.setProperty("--layer", `${i}`);
         this.container.append(child);
-        child.addEventListener("pointerdown", (e: any) => {
-          this.handleDown(e, "element");
+        addEvents(child, "element", (delta) => {
+          this.moveElement(child, delta);
         });
-        child.addEventListener("pointermove", (e: any) => {
-          this.handleMove(e, "element", (delta) => {
-            this.moveElement(child, delta);
-          });
-        });
+        child.setAttribute("draggable", "false");
         i++;
       }
     }
     this.requestUpdate();
-    this.root.addEventListener("pointerdown", (e: any) => {
-      this.handleDown(e, "canvas");
-    });
-    this.root.addEventListener("pointermove", (e: any) => {
-      this.handleMove(e, "canvas", (delta) => {
-        this.moveCanvas(delta);
-        for (const node of Array.from(this.container.children)) {
-          if (node instanceof SVGElement || node instanceof HTMLElement) {
-            this.moveElement(node, delta);
-          }
+    addEvents(this.root, "canvas", (delta) => {
+      this.moveCanvas(delta);
+      for (const node of Array.from(this.container.children)) {
+        if (node instanceof SVGElement || node instanceof HTMLElement) {
+          this.moveElement(node, delta);
         }
-      });
+      }
+    });
+    this.root.addEventListener("touchstart", function (e) {
+      e.preventDefault();
     });
     this.root.addEventListener("pointerup", (e: any) => {
       this.handleUp(e);
