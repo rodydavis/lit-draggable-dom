@@ -39,6 +39,7 @@ export class DraggableDOM extends LitElement {
       width: 100%;
       height: 100%;
       position: fixed;
+      transform: translate(var(--dx), var(--dy));
     }
     .child {
       --dx: 0px;
@@ -58,9 +59,43 @@ export class DraggableDOM extends LitElement {
 
   render() {
     return html`
-      <main class="full-size">
+      <main
+        class="full-size"
+        @pointerdown=${(e: any) => this.handleDown(e, "canvas")}
+        @pointermove=${(e: any) =>
+          this.handleMove(e, "canvas", (delta) => this.moveCanvas(delta))}
+        @touchstart=${(e: any) => this.handleDown(e, "canvas")}
+        @touchmove=${(e: any) =>
+          this.handleMove(e, "canvas", (delta) => this.moveCanvas(delta))}
+        @pointerup=${(e: any) => this.handleUp(e)}
+      >
         <canvas class="full-size"></canvas>
-        <div id="children" class="full-size"></div>
+        <div id="children" class="full-size">
+          <slot
+            class="child"
+            draggable="false"
+            @pointerdown=${(e: any) => this.handleDown(e, "element")}
+            @pointermove=${(e: any) =>
+              this.handleMove(e, "element", (delta) => {
+                this.moveElement(
+                  e.target.parentElement === this
+                    ? e.target
+                    : e.target.parentElement,
+                  delta
+                );
+              })}
+            @touchstart=${(e: any) => this.handleDown(e, "element")}
+            @touchmove=${(e: any) =>
+              this.handleMove(e, "element", (delta) =>
+                this.moveElement(
+                  e.target.parentElement === this
+                    ? e.target
+                    : e.target.parentElement,
+                  delta
+                )
+              )}
+          ></slot>
+        </div>
       </main>
     `;
   }
@@ -106,6 +141,8 @@ export class DraggableDOM extends LitElement {
     this.offset.y += delta.y;
     this.root.style.setProperty("--offset-x", `${this.offset.x}px`);
     this.root.style.setProperty("--offset-y", `${this.offset.y}px`);
+    this.container.style.setProperty("--dx", `${this.offset.x}px`);
+    this.container.style.setProperty("--dy", `${this.offset.y}px`);
   }
 
   moveElement(child: SupportedNode, delta: Offset) {
@@ -121,61 +158,6 @@ export class DraggableDOM extends LitElement {
     child.style.transform = `translate(${dx}px, ${dy}px)`;
     child.style.setProperty("--dx", `${dx}px`);
     child.style.setProperty("--dy", `${dy}px`);
-  }
-
-  async firstUpdated() {
-    const items = Array.from(this.childNodes);
-    let i = 0;
-    const addEvents = (
-      elem: Element,
-      type: DragType,
-      onMove: (delta: Offset) => void
-    ) => {
-      elem.addEventListener("pointerdown", (e: any) => {
-        this.handleDown(e, type);
-      });
-      elem.addEventListener("pointermove", (e: any) => {
-        this.handleMove(e, type, (delta) => {
-          onMove(delta);
-        });
-      });
-      elem.addEventListener("touchstart", (e: any) => {
-        this.handleDown(e, type);
-      });
-      elem.addEventListener("pointermove", (e: any) => {
-        this.handleMove(e, type, (delta) => {
-          onMove(delta);
-        });
-      });
-    };
-    for (const node of items) {
-      if (node instanceof SVGElement || node instanceof HTMLElement) {
-        const child = node as SupportedNode;
-        child.classList.add("child");
-        child.style.setProperty("--layer", `${i}`);
-        this.container.append(child);
-        addEvents(child, "element", (delta) => {
-          this.moveElement(child, delta);
-        });
-        child.setAttribute("draggable", "false");
-        i++;
-      }
-    }
-    this.requestUpdate();
-    addEvents(this.root, "canvas", (delta) => {
-      this.moveCanvas(delta);
-      for (const node of Array.from(this.container.children)) {
-        if (node instanceof SVGElement || node instanceof HTMLElement) {
-          this.moveElement(node, delta);
-        }
-      }
-    });
-    this.root.addEventListener("touchstart", function (e) {
-      e.preventDefault();
-    });
-    this.root.addEventListener("pointerup", (e: any) => {
-      this.handleUp(e);
-    });
   }
 }
 
