@@ -1,4 +1,4 @@
-# Lit CSS Canvas
+# Lit Draggable DOM
 
 [Lit](https://lit.dev) Example of how to take HTML Elements or SVG Elements as slots and render them on a canvas that can be dragged as a whole or individual items.
 
