@@ -44,4 +44,4 @@ var e=Object.defineProperty,t=Object.getOwnPropertySymbols,r=Object.prototype.ha
         --grid-color: grey;
       }
     }
-  `,f([i("main")],h.prototype,"root",2),f([i("#children")],h.prototype,"container",2),f([i("canvas")],h.prototype,"canvas",2),h=f([l("css-canvas")],h);
+  `,f([i("main")],h.prototype,"root",2),f([i("#children")],h.prototype,"container",2),f([i("canvas")],h.prototype,"canvas",2),h=f([l("draggable-dom")],h);
