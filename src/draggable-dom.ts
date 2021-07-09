@@ -4,8 +4,8 @@ import { customElement, query } from "lit/decorators.js";
 type DragType = "none" | "canvas" | "element";
 type SupportedNode = HTMLElement | SVGElement;
 
-@customElement("css-canvas")
-export class CSSCanvas extends LitElement {
+@customElement("draggable-dom")
+export class DraggableDOM extends LitElement {
   @query("main") root!: HTMLElement;
   @query("#children") container!: HTMLElement;
   @query("canvas") canvas!: HTMLCanvasElement;
