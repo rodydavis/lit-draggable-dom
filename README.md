@@ -2,9 +2,9 @@
 
 [Lit](https://lit.dev) Example of how to take HTML Elements or SVG Elements as slots and render them on a canvas that can be dragged as a whole or individual items.
 
-You can try the demo [here](https://rodydavis.github.io/lit-css-canvas/)!
+You can try the demo [here](https://rodydavis.github.io/lit-draggable-dom/)!
 
-Here is the related [blog post](https://rodydavis.com/posts/lit-css-canvas/).
+Here is the related [blog post](https://rodydavis.com/posts/lit-draggable-dom/).
 
 This uses [CSS 2D transforms and pointer capture events](https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture) to efficiently render and move the elements.
 
