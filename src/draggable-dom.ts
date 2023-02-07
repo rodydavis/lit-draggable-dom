@@ -41,7 +41,7 @@ export class DraggableDOM extends LitElement {
       position: fixed;
       transform: translate(var(--dx), var(--dy));
     }
-    .child {
+    ::slotted(*) {
       --dx: 0px;
       --dy: 0px;
       position: fixed;
